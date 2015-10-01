@@ -21,6 +21,7 @@
 #          Tomas Hozza <thozza@redhat.com>
 
 import os
+import sys
 
 REBASE_HELPER_SUFFIX = "-rebase"
 REBASE_HELPER_PREFIX = "rebase-helper-"
@@ -47,3 +48,5 @@ CHECKER_TAGS = ['added', 'removed', 'changed', 'moved', 'renamed']
 
 ABIDIFF_ERROR = 1
 ABIDIFF_USAGE_ERROR = 2
+
+defenc = "utf-8" if sys.getdefaultencoding() == "ascii" else sys.getdefaultencoding()

@@ -22,7 +22,11 @@
 
 import shutil
 import os
-import koji
+try:
+    import koji
+except ImportError:
+    print ('Koji is needed only for building with fedpkg')
+    pass
 import random
 import string
 import time
@@ -33,7 +37,11 @@ from rebasehelper.utils import PathHelper
 from rebasehelper.utils import TemporaryEnvironment
 from rebasehelper.utils import DownloadHelper
 from rebasehelper.logger import logger
-from pyrpkg.cli import TaskWatcher
+try:
+    from pyrpkg.cli import TaskWatcher
+except ImportError:
+    print ('Pyrpkg is needed only for building with fedpkg')
+    pass
 
 build_tools = {}
 

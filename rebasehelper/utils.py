@@ -283,7 +283,7 @@ class ProcessHelper(object):
         if out_file is not None:
             # read the output
             for line in sp.stdout:
-                out_file.write(line)
+                out_file.write(line.decode(settings.defenc))
             # TODO: Need to figure out how to send output to stdout (without logger) and to logger
             #else:
             #   logger.debug(line.rstrip("\n"))

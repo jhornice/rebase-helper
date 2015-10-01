@@ -23,6 +23,8 @@
 from __future__ import print_function
 import os
 import re
+import stat
+
 from rebasehelper.logger import logger
 from rebasehelper.utils import ConsoleHelper, defenc
 from rebasehelper.utils import ProcessHelper
@@ -257,7 +259,7 @@ class GitPatchTool(PatchBase):
             with open(prep_script_path, "w") as f:
                 f.write("#!/bin/bash\n\n")
                 f.writelines('\n'.join(prep))
-            os.chmod(prep_script_path, 0755)
+            os.chmod(prep_script_path, stat.S_IRWXU | stat.S_IXGRP | stat.S_IXOTH)
         except IOError:
             logger.debug("Unable to write prep script file to '%s'", prep_script_path)
             return None
