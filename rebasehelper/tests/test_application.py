@@ -23,7 +23,7 @@
 import os
 
 from .base_test import BaseTest
-from rebasehelper.cli import CLI
+from rebasehelper.cli import CliHelper
 from rebasehelper.application import Application
 from rebasehelper import settings
 
@@ -101,8 +101,8 @@ class TestApplication(BaseTest):
             'results_dir': os.path.join(self.WORKING_DIR, settings.REBASE_HELPER_RESULTS_DIR)}
 
         try:
-            cli = CLI(self.cmd_line_args)
-            app = Application(cli)
+            cli, execution_dir, debug_log_file, report_log_file = CliHelper.setup(self.cmd_line_args)
+            app = Application(cli, execution_dir, debug_log_file, report_log_file)
             app.prepare_sources()
             for key, val in app.kwargs.items():
                 if key in expected_dict:

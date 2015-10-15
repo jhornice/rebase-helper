@@ -21,3 +21,4 @@
 #          Tomas Hozza <thozza@redhat.com>
 
 PROGRAM_DESCRIPTION = "OS package rebase-helper"
+NEW_ISSUE_LINK = 'https://github.com/phracek/rebase-helper/issues/new'

@@ -21,14 +21,24 @@
 #          Tomas Hozza <thozza@redhat.com>
 
 import argparse
+import logging
+import os
 import sys
 
 import six
 
-from rebasehelper.constants import PROGRAM_DESCRIPTION
+from rebasehelper import settings
+from rebasehelper.constants import PROGRAM_DESCRIPTION, NEW_ISSUE_LINK
 from rebasehelper.application import Application
-from rebasehelper.logger import logger
+from rebasehelper.logger import logger, LoggerHelper
 from rebasehelper.exceptions import RebaseHelperError
+
+
+class ArgumentParser(argparse.ArgumentParser):
+
+    def error(self, message):
+        self.print_usage(sys.stderr)
+        raise RebaseHelperError(message)
 
 
 class CLI(object):
@@ -36,7 +46,7 @@ class CLI(object):
 
     def __init__(self, args=None):
         """parse arguments"""
-        self.parser = argparse.ArgumentParser(description=PROGRAM_DESCRIPTION)
+        self.parser = ArgumentParser(description=PROGRAM_DESCRIPTION)
         self.add_args()
         self.args = self.parser.parse_args(args)
 
@@ -148,15 +158,66 @@ class CLI(object):
 class CliHelper(object):
 
     @staticmethod
+    def setup(arguments):
+        # be verbose until debug_log_file is created
+        handler = LoggerHelper.add_stream_handler(logger, logging.DEBUG)
+
+        cli = CLI(arguments)
+
+        execution_dir = cli.results_dir if cli.results_dir else os.getcwd()
+        results_dir = os.path.join(execution_dir, settings.REBASE_HELPER_RESULTS_DIR)
+
+        # if not continuing, check the results dir
+        if not cli.cont and not cli.build_only and not cli.comparepkgs:
+            Application.check_results_dir(results_dir)
+
+        # This is used if user executes rebase-helper with --continue
+        # parameter even when directory does not exist
+        if not os.path.exists(results_dir):
+            os.makedirs(results_dir)
+            os.makedirs(os.path.join(results_dir, settings.REBASE_HELPER_LOGS))
+
+        debug_log_file = Application.add_debug_log_file(results_dir)
+        report_log_file = Application.add_report_log_file(results_dir)
+
+        if not cli.verbose:
+            handler.setLevel(logging.INFO)
+
+        return cli, execution_dir, debug_log_file, report_log_file
+
+    @staticmethod
     def run():
         try:
-            cli = CLI(sys.argv[1:])
-            app = Application(cli)
+            debug_log_file = None
+            cli, execution_dir, debug_log_file, report_log_file = CliHelper.setup(sys.argv[1:])
+            app = Application(cli, execution_dir, debug_log_file, report_log_file)
             app.run()
         except KeyboardInterrupt:
             logger.info('\nInterrupted by user')
         except RebaseHelperError as e:
-            logger.error('\n%s', six.text_type(e))
+            if e.args:
+                logger.error('\n%s', e.args[0] % e.args[1:])
+            else:
+                logger.error('\n%s', six.text_type(e))
+            sys.exit(1)
+        except SystemExit as e:
+            sys.exit(e.code)
+        except BaseException:
+            if debug_log_file:
+                logger.error('\nrebase-helper failed due to an unexpected error. Please report this problem'
+                             '\nusing the following link: %s'
+                             '\nand include the content of'
+                             '\n\'%s\''
+                             '\nfile in the report.'
+                             '\nThank you!',
+                             NEW_ISSUE_LINK, debug_log_file)
+            else:
+                logger.error('\nrebase-helper failed due to an unexpected error. Please report this problem'
+                             '\nusing the following link: %s'
+                             '\nand include the traceback following this message in the report.'
+                             '\nThank you!',
+                             NEW_ISSUE_LINK)
+            logger.debug('\n', exc_info=1)
             sys.exit(1)
 
         sys.exit(0)
