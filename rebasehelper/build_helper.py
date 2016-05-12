@@ -33,13 +33,12 @@ from rebasehelper.utils import TemporaryEnvironment
 from rebasehelper.logger import logger
 
 
-koji_builder = True
 try:
     import koji
-    from pyrpkg.cli import TaskWatcher
-    from OpenSSL import SSL
 except ImportError:
     koji_builder = False
+else:
+    koji_builder = True
 
 
 build_tools = {}
