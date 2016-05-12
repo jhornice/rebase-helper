@@ -126,7 +126,7 @@ class BuildLogAnalyzer(object):
     def _find_patch_error(cls, section):
         section_lst = section.split('\n')
         found_hunk = False
-        for index, x in enumerate(map(str.strip, section_lst)):
+        for x in map(str.strip, section_lst):
             if x.startswith('Hunk') and 'FAILED' in x:
                 found_hunk = True
             if x.startswith('RPM build errors') and found_hunk:

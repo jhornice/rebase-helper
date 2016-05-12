@@ -20,6 +20,8 @@
 # Authors: Petr Hracek <phracek@redhat.com>
 #          Tomas Hozza <thozza@redhat.com>
 
+import six
+
 from rebasehelper.cli import CLI
 
 
@@ -53,5 +55,5 @@ class TestCLI(object):
                      '--builds-nowait', '--build-tasks', '123456,654321',
                      '--results-dir', '/tmp/rebase-helper']
         cli = CLI(arguments)
-        for key, value in cli.args.__dict__.items():
+        for key in six.iterkeys(cli.args.__dict__):
             assert cli.args.__dict__[key] == conf[key]

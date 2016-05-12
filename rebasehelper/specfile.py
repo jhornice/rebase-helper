@@ -162,7 +162,7 @@ class SpecFile(object):
         sources_list = [x for x in self.spc.sources if x[2] == 1]
         remote_files_re = re.compile(r'(http:|https:|ftp:)//.*')
 
-        for index, src in enumerate(sorted(sources_list, key=lambda source: source[1])):
+        for src in sorted(sources_list, key=lambda source: source[1]):
             # src is type of (SOURCE, Index of source, Type of source (PAtch, Source)
             # We need to download all archives and only the one
             abs_path = os.path.join(self.sources_location, os.path.basename(src[0]).strip())
@@ -182,7 +182,7 @@ class SpecFile(object):
         patches_list = [p for p in self.spc.sources if p[2] == 2]
         patch_flags = self._get_patches_flags()
 
-        for filename, num, patch_type in patches_list:
+        for filename, num, _ in patches_list:
             patch_path = os.path.join(self.sources_location, filename)
             if not os.path.exists(patch_path):
                 logger.error('Patch %s does not exist', filename)
@@ -233,7 +233,7 @@ class SpecFile(object):
         new_spec_file = []
 
         try:
-            for key, value in sorted(six.iteritems(self.rpm_sections)):
+            for _, value in sorted(six.iteritems(self.rpm_sections)):
                 sec_name, section = value
                 if '%header' in sec_name:
                     new_spec_file.extend(section)

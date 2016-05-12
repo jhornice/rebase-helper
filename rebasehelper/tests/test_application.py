@@ -107,7 +107,7 @@ class TestApplication(BaseTest):
             for key, val in app.kwargs.items():
                 if key in expected_dict:
                     assert val == expected_dict[key]
-        except OSError as oer:
+        except OSError:
             pass
 
 
