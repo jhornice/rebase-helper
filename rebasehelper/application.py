@@ -624,7 +624,7 @@ class Application(object):
         message = "Scratch build for '%s' version is: http://koji.fedoraproject.org/koji/taskinfo?taskID=%s"
         for version in ['old', 'new']:
             data = logs[version]
-            logger.info(message % (data['version'], data['koji_task_id']))
+            logger.info(message, data['version'], data['koji_task_id'])
 
     def print_copr_logs(self):
         logs = self.get_new_build_logs()['build_ref']
