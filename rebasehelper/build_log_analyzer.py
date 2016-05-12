@@ -84,7 +84,7 @@ class BuildLogAnalyzer(object):
 
         # Test for finding files which exists in sources
         # but are not mentioned in spec file
-        missing_reg = 'error:\s+Installed\s+'
+        missing_reg = r'error:\s+Installed\s+'
         missing_source_reg = 'RPM build errors:'
         e_reg = 'EXCEPTION:'
         if cls._find_patch_error(lines):

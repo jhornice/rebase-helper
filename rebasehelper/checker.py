@@ -97,7 +97,7 @@ class RpmDiffTool(BaseChecker):
                 results_dict['added'].append(fields[1])
                 continue
             #'S.5........' for regexp
-            regexp = '(S)+\.(5)+\.\.\.\.\.\.\.\.'
+            regexp = r'(S)+\.(5)+\.\.\.\.\.\.\.\.'
             match = re.search(regexp, fields[0])
             if match:
                 results_dict['changed'].append(fields[1])

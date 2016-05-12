@@ -39,7 +39,6 @@ import gzip
 import copr
 import pyquery
 
-import six
 from six import StringIO
 from six.moves import input, urllib
 from distutils.util import strtobool
@@ -603,7 +602,7 @@ class MacroHelper(object):
         :return: list of macros
         """
         macro_re = re.compile(
-            '''
+            r'''
             ^\s*
             (?P<level>-?\d+)
             (?P<used>=|:)
