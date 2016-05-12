@@ -341,12 +341,10 @@ class PkgDiffTool(BaseChecker):
         cmd.append('-report-path')
         cmd.append(cls.pkgdiff_results_full_path)
         ret_code = ProcessHelper.run_subprocess(cmd, output=ProcessHelper.DEV_NULL)
-        """
-         From pkgdiff source code:
-         ret_code 0 means unchanged
-         ret_code 1 means Changed
-         other return codes means error
-        """
+        # From pkgdiff source code:
+        # ret_code 0 means unchanged
+        # ret_code 1 means Changed
+        # other return codes means error
         if int(ret_code) != 0 and int(ret_code) != 1:
             raise RebaseHelperError('Execution of %s failed.\nCommand line is: %s' % (cls.CMD, cmd))
         OutputLogger.set_info_text('HTML report from pkgdiff is stored in: ', cls.pkgdiff_results_full_path)
