@@ -59,6 +59,8 @@ class TestSpecFile(BaseTest):
         BUILD_OBSOLETES_LOG
     ]
 
+    SPEC_FILE_OBJECT = None
+
     def setup(self):
         super(TestSpecFile, self).setup()
         self.SPEC_FILE_OBJECT = SpecFile(self.SPEC_FILE, self.WORKING_DIR, download=False)
