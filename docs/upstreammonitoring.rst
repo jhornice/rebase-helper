@@ -1,21 +1,23 @@
-How to use rebase-helper for Upstream Monitoring systems
+How to use the rebase-helper for Upstream Monitoring systems
 ========================================================
 
-The page describes integration of rebase-helper into upstream monitoring systems.
-Of course you need to install rebase-helper package
+The page describes the integration of the rebase-helper into upstream monitoring systems.
+You need to install a rebase-helper package
+
 - either as RPM::
 
   dnf install rebase-helper
 
-- from GitHub::
+- or from GitHub::
 
   git clone https://github.com/phracek/rebase-helper
 
-Nowadays we support only koji build systems as a support for upstream monitoring systems.
-But time changes and we are open to the another build systems.
+Nowadays only koji build systems are used as a support for upstream monitoring systems.
 
-- Patch the new sources and run koji scratch build
--- Python API usage::
+
+## Patch the new sources and run koji scratch build
+
+### Python API usage::
 
    from rebasehelper.application import Application
    cli = CLI(['--non-interactive', '--builds-nowait', '--buildtool', 'fedpkg', 'upstream_version'])
@@ -23,17 +25,20 @@ But time changes and we are open to the another build systems.
    rh.set_upstream_monitoring() # Switch rebase-helper to upstream release monitoring mode.
    rh.run()
    rh.get_rebasehelper_data() # Get all information about the results
--- Bash usage::
+
+### Bash usage::
 
     rebase-helper --non-interactive --builds-nowait --buildtool fedpkg upstream_version
 
-- Download logs and RPMs for comparing with checkers
--- Python API usage::
+## Download logs and RPMs for comparing with checkers
+
+### Python API usage::
 
    cli = CLI(['--non-interactive', '--builds-nowait', '--buildtool', 'fedpkg', '--build-tasks', 'old_id,new-id'])
    rh.run() # Downloads RPMs, logs and runs checkers and provides logs.
-   rh.get_rebasehelper_data() # Get all information about the results
--- Bash usage::
+   rh.get_rebasehelper_data() # Gets all the information about the results
+
+### Bash usage::
 
    rebase-helper --non-interactive --builds-nowait --buildtool fedpkg --build-tasks old_id,new-id
 
